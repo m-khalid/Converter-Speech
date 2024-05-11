@@ -1,0 +1,69 @@
+<form>
+   
+    <div class="form-group">
+      <label for="exampleFormControlSelect1" >Example select</label>
+      <select class="form-control" id="mySelect" style="width: 90px;">
+        <option>en</option>
+        <option>ar</option>
+        <option>fr</option>
+        <option>en-uk</option>
+        
+      </select>
+    </div>
+  
+    <div class="form-group">
+      <label for="exampleFormControlTextarea1" >Example textarea</label>
+      <textarea class="form-control" id="myTextarea"  placeholder="salouma"rows="3"></textarea>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="action_btn()">Convert</button>
+  <br>
+  <br>
+    <figure id="mySound" style="display: none;">
+        <audio id ="myAudio" controls src=""></audio>
+  <br>
+      
+        <a href="http://erpdev.trackintltrade.com/files/sound.mp3" download> Download audio </a>
+      </figure>
+      
+</form>
+
+<script>
+    
+  function action_btn() {
+    var textareaValue = document.getElementById("myTextarea").value;
+    document.getElementById("mySound").style.display="none";
+    var audioSource = document.getElementById("myAudio");
+    audioSource.removeAttribute("src");
+
+  // Get the selected value from the select element
+  var selectValue = document.getElementById("mySelect").value;
+  console.log(selectValue);
+  console.log(textareaValue);
+    frappe.call({
+      method: "erpnext.www.converterspeach.index.get_converter_speach",
+      args: {
+        text: textareaValue,
+        lang: selectValue,
+      },
+
+      freeze: true,
+      callback: function (r) {
+        if (r.message){
+   document.getElementById("mySound").style.display="block";
+   var newSrc="http://erpdev.trackintltrade.com/files/sound.mp3";
+   newSrc += "?cache=" + Math.random(); // Append a random query parameter  
+   audioSource.setAttribute("src", newSrc);
+   var audio = document.getElementById("myAudio");
+//    window.location.reload(true); // Pass true to force a hard reload
+   audio.play();
+        }
+    },
+    });
+  }
+
+
+
+
+</script>  
+
+
